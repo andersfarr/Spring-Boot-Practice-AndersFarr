@@ -3,6 +3,7 @@ package io.javabrains.afarrspringbootquickstarter.topic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,16 @@ public class TopicService {
 	
 	public void addTopic(Topic topic) {
 		topics.add(topic);
+	}
+	
+	public void updateTopic(String id, Topic topic) {
+		this.topics = topics.stream()
+			.map(t-> t.getId().equals(id) ? topic : t)
+			.collect(Collectors.toList());
+	}
+	
+	public void deleteTopic(String id) {
+		topics.removeIf(t-> t.getId().equals(id));
 	}
 
 }
