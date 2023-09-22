@@ -5,40 +5,36 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TopicService {
 	
-	private List<Topic> topics = new ArrayList<Topic>(Arrays.asList(
-			new Topic("Math", "Real Analysis", "Cauchy Sequences"),
-			new Topic("CS", "Algorithms", "Convex Hull"),
-			new Topic("Religion", "Yoga in India and the West", "KrishnaCore Punk")
-			));
+	@Autowired
+	private TopicRepository topicRepository;
 	
 	public List<Topic> getAllTopics(){
+		List<Topic> topics = new ArrayList<>();
+		topicRepository.findAll()
+		.forEach(t-> topics.add(t));
 		return topics;
 	}
 	
 	public Topic getTopic(String id) {
-		return topics.stream()
-				.filter(t -> t.getId().equals(id))
-				.findFirst()
-				.get();
+		return topicRepository.findById(id).get();
 	}
 	
 	public void addTopic(Topic topic) {
-		topics.add(topic);
+		topicRepository.save(topic);
 	}
 	
 	public void updateTopic(String id, Topic topic) {
-		this.topics = topics.stream()
-			.map(t-> t.getId().equals(id) ? topic : t)
-			.collect(Collectors.toList());
+		topicRepository.save(topic);
 	}
 	
 	public void deleteTopic(String id) {
-		topics.removeIf(t-> t.getId().equals(id));
+		topicRepository.deleteById(id);
 	}
 
 }
